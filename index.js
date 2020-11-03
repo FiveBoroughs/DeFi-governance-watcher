@@ -18,7 +18,7 @@ const hubs = { 'spaces': '/spaces', 'proposals': '/proposals', 'proposal': '/pro
 const tgBaseUrl = `https://api.telegram.org/bot${process.env.TG_BOT_API_KEY}`
 const tgActions = { 'send': '/sendMessage', 'update': '/getUpdates' }
 
-const queryInterval = 5 //seconds
+const queryInterval = 60 * 5 //seconds
 
 //#region classes
 class Space {
@@ -373,10 +373,12 @@ const updateSnapshotSpaces = async () => {
     const addedSpaces = spaces.filter(x => !existingSpaces.map(y => y.id).includes(x.id));
     const removedSpaces = existingSpaces.filter(x => !spaces.map(y => y.id).includes(x.id));
 
+    //Alert and add new spaces
     if (addedSpaces.length > 0) {
         sendAlert(new Alert(`Found ${addedSpaces.length} recently added space(s)`, `${addedSpaces.map(x => x.name).join(', ')}`));
         addedSpaces.forEach(async x => await addSnapshotSpace(x))
     }
+    //Alert and remove old spaces
     if (removedSpaces.length > 0) {
         sendAlert(new Alert(`Found ${removedSpaces.length} recently removed space(s)`, `${removedSpaces.map(x => x.name).join(', ')}`));
         removedSpaces.forEach(async x => await delSnapshotSpace(x))
@@ -394,6 +396,7 @@ const updateProposals = async (pSpace) => {
     const addedProposals = proposals.filter(x => !existingProposals.map(y => y.id).includes(x.id));
     const removedProposals = existingProposals.filter(x => !proposals.map(y => y.id).includes(x.id));
 
+    //Alert and add new proposals
     if (addedProposals.length > 0) {
         sendAlert(new Alert(`Found ${addedProposals.length} recently added proposal(s) for ${pSpace.name}`, `${addedProposals.map(x => x.name).join(',\n')}`));
         for (let addedProposal of addedProposals) {
@@ -401,6 +404,8 @@ const updateProposals = async (pSpace) => {
             await updateProposalChoices(addedProposal)
         }
     }
+
+    //Alert and remove old proposals
     if (removedProposals.length > 0) {
         sendAlert(new Alert(`Found ${removedProposals.length} recently removed proposal(s) for ${pSpace.name}`, `${removedProposals.map(x => x.name).join(',\n')}`));
         removedProposals.forEach(async x => await delSnapshotProposal(x))
@@ -469,6 +474,7 @@ const updateVoteCounts = async (pProposal) => {
             //Proposals that changed by % over threshold
 
             //Proposals that ...
+
         }, queryInterval * 1000)
 
     } catch (e) {
