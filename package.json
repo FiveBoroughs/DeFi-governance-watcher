@@ -1,0 +1,17 @@
+{
+  "name": "DeFi-governance-watcher",
+  "version": "1.0.0",
+  "description": "Watch Defi for new governance proposals",
+  "main": "index.js",
+  "repository": "git@github.com:FiveBoroughs/DeFi-governance-watcher.git",
+  "author": "Five Boroughs <FiveBoroughs@pinescripters.io>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "axios": "^0.21.0",
+    "dotenv": "^8.2.0",
+    "knex": "^0.21.11",
+    "level": "^6.0.1",
+    "sqlite3": "^5.0.0"
+  }
+}
